@@ -1,0 +1,26 @@
+{
+    "productos":[
+        {
+            "id":"001",
+            "nombre":"teclado",
+            "precioUnidad":20000,
+            "stock":5,
+            "descripcion":"teclado inalambrico"
+        },
+        {
+            "id":"002",
+            "nombre":"mouse",
+            "precioUnidad":5000,
+            "stock":20,
+            "descripcion":"mouse convencional"
+        },
+        {
+            "id":"003",
+            "nombre":"monitor",
+            "precioUnidad":20000,
+            "stock":6,
+            "descripcion":"monitor led"
+        }
+    ],
+    "usuarios":[]
+}
