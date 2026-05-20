@@ -55,6 +55,20 @@
       "stock": 1,
       "descripcion": "primer iphone con identificacion facial",
       "id": "sFMDMtZivU4"
+    },
+    {
+      "nombre": "televisor",
+      "precioUnidad": 50000,
+      "stock": 8,
+      "descripcion": "es bonito",
+      "id": "pCp8iFHhtvw"
+    },
+    {
+      "nombre": "tarjeta grafica",
+      "precioUnidad": 1200000,
+      "stock": 4,
+      "descripcion": "barata pero buena",
+      "id": "vyqnZajGqBI"
     }
   ],
   "usuarios": [],
