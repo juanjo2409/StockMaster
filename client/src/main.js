@@ -1,103 +1,329 @@
 import './styles/globals.css';
-import { alertaExitosa } from './utils/alerts';
+import { alertaExitosa, alertaEliminar } from './utils/alerts';
 
 const endpoint = "http://localhost:3000/productos"
 
+// ================================
+// VARIABLES
+// ================================
+
 const formulario = document.getElementById("product-form")
+
 const nombreProducto = document.getElementById("nombre")
+
 const precioUnidad = document.getElementById("precio")
+
 const stock = document.getElementById("stock")
+
 const descripcionProducto = document.getElementById("descripcion")
 
-formulario.addEventListener("submit", (event) => {
+const buscador = document.getElementById("buscador")
+
+let idProductoEditando = null
+
+let todosLosProductos = []
+
+
+// ================================
+// FORMULARIO
+// ================================
+
+formulario.addEventListener("submit", async (event) => {
+
     event.preventDefault()
 
     const productoNuevo = {
+
         nombre: nombreProducto.value.toLowerCase().trim(),
+
         precioUnidad: Number(precioUnidad.value),
+
         stock: Number(stock.value),
+
         descripcion: descripcionProducto.value.toLowerCase().trim()
     }
 
-    agregarProducto(productoNuevo)
+    // EDITAR
+    if (idProductoEditando) {
 
+        await actualizarProducto(idProductoEditando, productoNuevo)
 
+        idProductoEditando = null
 
+    } else {
 
-    event.target.reset()
+        // CREAR
+        await agregarProducto(productoNuevo)
+    }
+
+    formulario.reset()
 })
 
 
+// ================================
+// BUSCADOR
+// ================================
+
+buscador.addEventListener("input", () => {
+
+    const texto = buscador.value.toLowerCase().trim()
+
+    const productosFiltrados = todosLosProductos.filter(producto => {
+
+        return (
+            producto.nombre.toLowerCase().includes(texto) ||
+            producto.descripcion.toLowerCase().includes(texto)
+        )
+    })
+
+    pintarLosDatos(productosFiltrados)
+})
 
 
-
+// ================================
+// TRAER DATOS
+// ================================
 
 async function traeDatos() {
 
     const response = await fetch(endpoint)
+
     const productos = await response.json()
+
+    todosLosProductos = productos
+
     pintarLosDatos(productos)
+
+    pintarEstadisticas(productos)
 }
 
 
+// ================================
+// AGREGAR PRODUCTO
+// ================================
+
 async function agregarProducto(producto) {
 
-    const response = await fetch(endpoint,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body:JSON.stringify(producto)
-        }
-    )
+    const response = await fetch(endpoint, {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(producto)
+    })
 
     if (response.ok) {
+
         traeDatos()
+
         alertaExitosa("Producto agregado exitosamente")
     }
 }
 
-traeDatos()
 
+// ================================
+// ACTUALIZAR PRODUCTO
+// ================================
 
-function pintarLosDatos(productos) {
-    const lugarDeImpresion = document.getElementById("inventory-list")
-    lugarDeImpresion.innerHTML = ``
+async function actualizarProducto(id, producto) {
 
-    for (const producto of productos) {
-        lugarDeImpresion.innerHTML += `
-        <tr class="hover:bg-slate-50/30 transition-colors group">
-            <td class="px-8 py-6">
-                <div class="flex flex-col">
-                <span class="font-bold text-slate-900">${producto.nombre}</span>
-                <span class="text-xs text-slate-400 mt-1 line-clamp-1 max-w-[300px]">${producto.descripcion}</span>
-                </div>
-            </td>
-            <td class="px-8 py-6 text-center">
-                <span class="px-4 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase tracking-tight border border-emerald-100">${producto.stock} unidades</span>
-            </td>
-            <td class="px-8 py-6 text-center font-bold text-slate-900">COP ${producto.precioUnidad}</td>
-            <td class="px-8 py-6 text-right">
-                <div class="flex justify-end gap-3">
-                <button  data-id="${producto.id}" class="w-10 h-10 flex items-center justify-center text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all border border-transparent hover:border-indigo-100" title="Editar">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                </button>
-                <button data-id="${producto.id}"  class="w-10 h-10 flex items-center justify-center text-rose-600 hover:bg-rose-50 rounded-xl transition-all border border-transparent hover:border-rose-100" title="Eliminar">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                </button>
-                </div>
-            </td>
-        </tr>
-        `
+    const response = await fetch(`${endpoint}/${id}`, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(producto)
+    })
+
+    if (response.ok) {
+
+        traeDatos()
+
+        alertaExitosa("Producto actualizado correctamente")
     }
-
-
 }
 
 
+// ================================
+// PINTAR TABLA
+// ================================
 
+function pintarLosDatos(productos) {
+
+    const lugarDeImpresion = document.getElementById("inventory-list")
+
+    lugarDeImpresion.innerHTML = ``
+
+    for (const producto of productos) {
+
+        lugarDeImpresion.innerHTML += `
+
+        <tr class="hover:bg-slate-50 transition-all">
+
+            <td class="px-8 py-6">
+
+                <div class="flex flex-col">
+
+                    <span class="font-bold text-slate-900">
+                        ${producto.nombre}
+                    </span>
+
+                    <span class="text-xs text-slate-400 mt-1">
+                        ${producto.descripcion}
+                    </span>
+
+                </div>
+
+            </td>
+
+            <td class="px-8 py-6 text-center">
+
+                <span class="px-4 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl text-[10px] font-black uppercase border border-emerald-100">
+
+                    ${producto.stock} unidades
+
+                </span>
+
+            </td>
+
+            <td class="px-8 py-6 text-center font-bold text-slate-900">
+
+                COP ${producto.precioUnidad.toLocaleString()}
+
+            </td>
+
+            <td class="px-8 py-6 text-right">
+
+                <div class="flex justify-end gap-3">
+
+                    <!-- EDITAR -->
+                    <button 
+                        data-id="${producto.id}" 
+                        class="btn-editar flex items-center justify-center w-11 h-11 rounded-2xl bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 hover:border-indigo-600 transition-all duration-300"
+                    >
+
+                        ✏️
+
+                    </button>
+
+                    <!-- ELIMINAR -->
+                    <button 
+                        data-id="${producto.id}" 
+                        class="btn-eliminar flex items-center justify-center w-11 h-11 rounded-2xl bg-rose-50 hover:bg-rose-500 border border-rose-100 hover:border-rose-500 transition-all duration-300"
+                    >
+
+                        🗑️
+
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>
+        `
+    }
+}
+
+
+// ================================
+// ELIMINAR
+// ================================
+
+document.addEventListener("click", async (event) => {
+
+    const botonEliminar = event.target.closest(".btn-eliminar")
+
+    if (!botonEliminar) return
+
+    const id = botonEliminar.dataset.id
+
+    const confirmar = confirm("¿Deseas eliminar este producto?")
+
+    if (!confirmar) return
+
+    const response = await fetch(`${endpoint}/${id}`, {
+
+        method: "DELETE"
+    })
+
+    if (response.ok) {
+
+        alertaEliminar()
+
+        traeDatos()
+    }
+})
+
+
+// ================================
+// EDITAR
+// ================================
+
+document.addEventListener("click", async (event) => {
+
+    const botonEditar = event.target.closest(".btn-editar")
+
+    if (!botonEditar) return
+
+    const id = botonEditar.dataset.id
+
+    const response = await fetch(`${endpoint}/${id}`)
+
+    const producto = await response.json()
+
+    nombreProducto.value = producto.nombre
+
+    precioUnidad.value = producto.precioUnidad
+
+    stock.value = producto.stock
+
+    descripcionProducto.value = producto.descripcion
+
+    idProductoEditando = id
+})
+
+
+// ================================
+// ESTADISTICAS
+// ================================
+
+function pintarEstadisticas(productos) {
+
+    // TOTAL UNIDADES
+    const totalProductos = productos.reduce((acumulador, producto) => {
+
+        return acumulador + producto.stock
+
+    }, 0)
+
+    // VALOR INVENTARIO
+    const valorInventario = productos.reduce((acumulador, producto) => {
+
+        return acumulador + (producto.precioUnidad * producto.stock)
+
+    }, 0)
+
+    // STOCK CRITICO
+    const stockCritico = productos.filter(producto => producto.stock < 10).length
+
+    document.getElementById("stat-total").textContent = totalProductos
+
+    document.getElementById("stat-value").textContent =
+        `COP ${valorInventario.toLocaleString()}`
+
+    document.getElementById("stat-low").textContent = stockCritico
+}
+
+
+// ================================
+// INICIAR APP
+// ================================
+
+traeDatos()

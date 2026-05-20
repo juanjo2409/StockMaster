@@ -1,18 +1,18 @@
 {
   "productos": [
     {
-      "id": "001",
       "nombre": "teclado multicolor",
       "precioUnidad": 20000,
-      "stock": 9,
-      "descripcion": "teclado inalambrico"
+      "stock": 50,
+      "descripcion": "teclado inalambrico",
+      "id": "001"
     },
     {
-      "id": "002",
       "nombre": "mouse",
       "precioUnidad": 5000,
-      "stock": 20,
-      "descripcion": "mouse convencional"
+      "stock": 30,
+      "descripcion": "mouse convencional",
+      "id": "002"
     },
     {
       "id": "003",
@@ -55,22 +55,9 @@
       "stock": 1,
       "descripcion": "primer iphone con identificacion facial",
       "id": "sFMDMtZivU4"
-    },
-    {
-      "nombre": "televisor",
-      "precioUnidad": 50000,
-      "stock": 8,
-      "descripcion": "es bonito",
-      "id": "pCp8iFHhtvw"
-    },
-    {
-      "nombre": "tarjeta grafica",
-      "precioUnidad": 1200000,
-      "stock": 4,
-      "descripcion": "barata pero buena",
-      "id": "vyqnZajGqBI"
     }
   ],
   "usuarios": [],
+  "$database": "./node_modules/json-server/database.json",
   "$schema": "./node_modules/json-server/schema.json"
 }
