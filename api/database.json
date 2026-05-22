@@ -1,7 +1,7 @@
 {
   "productos": [
     {
-      "nombre": "teclado multicolor",
+      "nombre": "tv de 50 pulgadas",
       "precioUnidad": 20000,
       "stock": 50,
       "descripcion": "teclado inalambrico",
@@ -50,11 +50,11 @@
       "id": "yazGhDJsuZg"
     },
     {
-      "nombre": "iphone x",
-      "precioUnidad": 400000,
-      "stock": 1,
-      "descripcion": "primer iphone con identificacion facial",
-      "id": "sFMDMtZivU4"
+      "nombre": "aire de 9000",
+      "precioUnidad": 1200000,
+      "stock": 4,
+      "descripcion": "aire acondicionado",
+      "id": "safIs5WrXfU"
     }
   ],
   "usuarios": [],

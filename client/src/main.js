@@ -24,9 +24,7 @@ let idProductoEditando = null
 let todosLosProductos = []
 
 
-// ================================
-// FORMULARIO
-// ================================
+
 
 formulario.addEventListener("submit", async (event) => {
 
@@ -60,9 +58,7 @@ formulario.addEventListener("submit", async (event) => {
 })
 
 
-// ================================
-// BUSCADOR
-// ================================
+
 
 buscador.addEventListener("input", () => {
 
@@ -80,9 +76,7 @@ buscador.addEventListener("input", () => {
 })
 
 
-// ================================
-// TRAER DATOS
-// ================================
+
 
 async function traeDatos() {
 
@@ -98,9 +92,7 @@ async function traeDatos() {
 }
 
 
-// ================================
-// AGREGAR PRODUCTO
-// ================================
+
 
 async function agregarProducto(producto) {
 
@@ -124,9 +116,9 @@ async function agregarProducto(producto) {
 }
 
 
-// ================================
+
 // ACTUALIZAR PRODUCTO
-// ================================
+
 
 async function actualizarProducto(id, producto) {
 
@@ -150,9 +142,9 @@ async function actualizarProducto(id, producto) {
 }
 
 
-// ================================
+
 // PINTAR TABLA
-// ================================
+
 
 function pintarLosDatos(productos) {
 
@@ -232,9 +224,8 @@ function pintarLosDatos(productos) {
 }
 
 
-// ================================
+
 // ELIMINAR
-// ================================
 
 document.addEventListener("click", async (event) => {
 
@@ -262,9 +253,9 @@ document.addEventListener("click", async (event) => {
 })
 
 
-// ================================
+
 // EDITAR
-// ================================
+
 
 document.addEventListener("click", async (event) => {
 
@@ -290,9 +281,8 @@ document.addEventListener("click", async (event) => {
 })
 
 
-// ================================
+
 // ESTADISTICAS
-// ================================
 
 function pintarEstadisticas(productos) {
 
@@ -321,9 +311,5 @@ function pintarEstadisticas(productos) {
     document.getElementById("stat-low").textContent = stockCritico
 }
 
-
-// ================================
-// INICIAR APP
-// ================================
 
 traeDatos()
